@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# 💰 Smart Finance Tracker (Gelişmiş Kişisel Finans Yönetim Sistemi)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Smart Finance Tracker, bileşen tabanlı (component-based) mimari kullanılarak ReactJS ile geliştirilmiş, asenkron veri simülasyonu ve global state yönetimi içeren profesyonel bir finansal takip otomasyonudur. 
 
-## Available Scripts
+Bu proje; bütçe planlaması, harcama analizleri ve abonelik tabanlı dinamik gider yönetimini tek bir ekranda (Single Page Dashboard) optimize edilmiş performans ile sunar.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🛠️ Detaylı Teknik Analiz ve Proje Mimarisi
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. Global State Yönetimi: React Context API
+Projede verilerin yukarıdan aşağıya (Props Drilling) taşınarak performans kaybı yaratmasını önlemek amacıyla **React Context API** kullanılmıştır. `FinanceContext.js` dosyası projenin ana veri motorudur.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+*   **Merkezi Veri Havuzu (Global State):** Harcamalar (`expenses`), düzenli abonelikler (`subscriptions`), maaş günü (`payDayDate`), bütçe sınırı (`budgetLimit`) ve takvim bitiş tarihi (`endDate`) tek bir Context üzerinde tutulur.
+*   **Dinamik Context Metotları:** `addExpense`, `deleteExpense`, `updateExpense`, `addSubscription`, `cancelSubscription` gibi tüm CRUD fonksiyonları Context içerisinde tanımlanarak uygulamanın en uçtaki yaprak bileşenlerine (örn: `ExpenseForm`, `SubscriptionManager`) tek bir satırla (`useContext`) enjekte edilir.
 
-### `npm test`
+### 2. Akıllı Bütçe ve Maaş Döngüsü Mantığı (Finansal Algoritma)
+Uygulama, standart uygulamalardan farklı olarak **akıllı bir zaman/bütçe filtresi** algoritmasına sahiptir:
+*   **Gelecek Ay Filtreleme Mantığı:** Kullanıcı bir sonraki aya ait veya gelecekteki bir tarihe abonelik/harcama girdiğinde, bu veriler **mevcut bütçe limitinden düşülmez**. 
+*   **Dinamik Kalan Bütçe Hesaplaması:** Sistem, girilen `payDayDate` ile `endDate` arasındaki aktif aralığı anlık olarak kontrol eder. Toplam harcamalar hesaplanırken, yalnızca bu tarih aralığına denk gelen güncel harcamalar formüle dahil edilir. Böylece kullanıcıya sahte bütçe alarmları verilmesi engellenir.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 3. Kullanılan Modern React Hook'ları ve Rolleri
+*   **`useState`:** Form girdilerinin (Input control) anlık takibi, modal açılış/kapanış animasyonları ve düzenleme (Edit mode) durumlarının local state yönetiminde kullanıldı.
+*   **`useContext`:** `FinanceContext` yapısına bağlanarak tüm finansal havuzun global olarak okunmasını ve tetiklenmesini sağladı.
+*   **`useEffect`:** Kullanıcının girdiği verilerin tarayıcı hafızasında saklanması (**LocalStorage senkronizasyonu**) ve veri değişikliklerinde grafiklerin tetiklenerek yeniden render (Re-chart re-rendering) edilmesini yönetti.
 
-### `npm run build`
+### 4. Görsel Veri Analizi: Recharts
+Kullanıcının harcama alışkanlıklarını analiz edebilmesi için **Recharts** kütüphanesi entegre edilmiştir. 
+*   Veri kümesi (dataset), harcama kategorilerine göre (`Gıda`, `Fatura`, `Eğlence`, `Ulaşım` vb.) `reduce` fonksiyonu ile gruplanır.
+*   Dinamik pasta grafik (Pie Chart) veya bar grafik yapıları kullanılarak harcamaların oransal dağılımı kullanıcıya görsel bir rapor olarak sunulur.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 5. UI/UX Tasarımı ve Sayfa Düzeni (Layout)
+*   **Bootstrap 5 Flex & Grid:** Proje dikeyde taşma yapmaması (No-scroll layout) için tamamen Bootstrap 5'in `row`, `col-lg-*` ve `d-flex` sınıfları ile tasarlanmıştır. Tüm bileşenler tek bir ekrana sığacak şekilde ölçeklenmiştir.
+*   **Custom Scroll Panelleri (`index.css`):** Sürekli uzayabilecek olan harcama ve abonelik listeleri için özel `max-height` ve `overflow-y: auto` içeren CSS sınıfları yazılmıştır. Bu sayede sayfanın genel bütünlüğü bozulmadan liste içi kaydırma deneyimi (In-app scrolling) sağlanmıştır.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## ⚙️ Sistemi Yerel Bilgisayarda Çalıştırma
 
-### `npm run eject`
+1. Projeyi klonlayın:
+   ```bash
+   git clone [https://github.com/CeydaAyaz/Smart-Finance-Tracker.git](https://github.com/CeydaAyaz/Smart-Finance-Tracker.git)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Proje dizinine girin:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+    cd smart-finance-tracker
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Gerekli kütüphaneleri ve bağımlılıkları indirin:
+   ```bash
+   npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. Projeyi lokal sunucuda ayağa kaldırın:
+    ```bash
+    npm start
 
-## Learn More
+Uygulama tarayıcınızda otomatik olarak http://localhost:3000 adresinde açılacaktır.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  👩‍💻 Geliştirici **Ceyda Ayaz** - [GitHub Profili](https://github.com/CeydaAyaz)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
