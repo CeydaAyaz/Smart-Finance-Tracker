@@ -44,7 +44,7 @@ function ExpenseChart() {
 
       {isOverBudget && (
         <div className="alert alert-danger py-1 px-2 mb-2 small" role="alert">
-          <strong>⚠️ Dikkat!</strong> Harcama ({grandTotal.toFixed(2)} TL), {numericBudget} TL bütçeyi aştı!
+          <strong>⚠️ Dikkat!</strong> Harcama ({grandTotal.toFixed(2)} TL), {numericBudget} TL olan bütçenizi aştı!
         </div>
       )}
       
